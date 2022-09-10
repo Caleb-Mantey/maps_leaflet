@@ -1,0 +1,42 @@
+.myProgressGreen {
+  width: 70px;
+  background-color: #ddd;
+	height: 8px;
+	margin-top: 5px;
+	border-radius: 25px;
+	overflow: hidden;
+	.myBarGreen {
+		width: 10%;
+		height: 15px;
+		background-color: #04AA6D;
+	}
+}
+
+.myProgressRed {
+  width: 70px;
+  background-color: #ddd;
+	height: 8px;
+	margin-top: 5px;
+	border-radius: 25px;
+	overflow: hidden;
+	.myBarRed {
+		width: 10%;
+		height: 15px;
+		background-color: #df2108;
+	}
+}
+
+.myProgressYellow {
+  width: 70px;
+  background-color: #ddd;
+	height: 8px;
+	margin-top: 5px;
+	border-radius: 25px;
+	overflow: hidden;
+	.myBarYellow {
+		width: 10%;
+		height: 15px;
+		background-color: #dbbc0d;
+	}
+}
+

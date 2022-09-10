@@ -1,0 +1,19 @@
+.tableComments {
+	max-height: calc(100vh - 140px);
+	overflow-y: scroll;
+
+	::-webkit-scrollbar {
+		width: 0px;
+	}
+	::-webkit-scrollbar-track {
+		box-shadow: inset 0 0 2px #747474;
+		border-radius: 10px;
+	}
+	::-webkit-scrollbar-thumb {
+		background: #747474;
+		border-radius: 10px;
+	}
+	::-webkit-scrollbar-thumb:hover {
+		background: #747474;
+	}
+}

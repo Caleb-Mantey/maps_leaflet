@@ -1,0 +1,29 @@
+.sentiment-marker {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  border-radius: 50%;
+  margin-left: 1rem;
+}
+
+.sentiment-marker.big {
+  width: 20px;
+  height: 20px;
+}
+
+.bad + .sentiment-marker-text {
+  color: var(--sentiment-bad-text) !important;
+}
+
+.neutral + .sentiment-marker-text {
+  color: var(--sentiment-neutral-text) !important;
+}
+
+.good + .sentiment-marker-text {
+  color: var(--sentiment-good-text) !important;
+}
+
+.sentiment-marker + .sentiment-marker-text {
+  font-size: 0.8rem !important;
+  margin-left: 1rem;
+}
