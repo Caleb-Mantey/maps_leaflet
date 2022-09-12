@@ -24,6 +24,8 @@ import "./Map.scss";
 // import Loader from "../../../../../App/LayoutComponents/Loader/Loader";
 import { data } from "../util/data";
 import SelectComponent from "../MultiSelect/SelectComponent";
+import ChipsIcon from "../Icons/ChipsIcon";
+import PillButton from "../Buttons/PillButton";
 
 var southWest = L.latLng(-90, 180),
   northEast = L.latLng(90, -180),
@@ -45,10 +47,13 @@ function MapComponent({ searchObject }) {
   // });
 
   const [coordinates, setCoordinates] = useState([]);
+  const [filteredCoordinates, setFilteredCoordinates] = useState([]);
 
   const [tweetData, setTweetData] = useState({});
   const [tweetList, setTweetList] = useState(new Map()); // Stores the map tweet modals
-  const [tweetLocations, setTweetLocations] = useState([]);
+  const [selectedTweetLocations, setSelectedTweetLocations] = useState([]);
+  const [search, setSearch] = useState("");
+  const [allTweetLocations, setAllTweetLocations] = useState([]);
 
   const tweetColumns = [
     { label: "Profile Image", value: "profile_image_url" },
@@ -82,34 +87,80 @@ function MapComponent({ searchObject }) {
         const data = cleanData(allTweets);
         const [locationCountList, tweetData] = data;
         setTweetData(tweetData);
+        // initializeAllTweetLocations(locationCountList);
         setCoordinates(locationCountList);
+        setFilteredCoordinates(locationCountList);
+        // console.log(locationCountList);
       } catch (e) {
         console.error("cleanData error ==> ", e);
       }
     }
   }, [twitterResponse]);
 
-  const addTweetLocation = (location) => {
-    if (tweetLocations.find((item) => item.value === location.value)) return;
+  useEffect(() => {
+    if (search === "") {
+      setFilteredCoordinates([...coordinates]);
+      return;
+    }
 
-    setTweetLocations([...tweetLocations, location]);
+    setFilteredCoordinates([
+      ...coordinates.filter(
+        (coord) =>
+          coord.locationCode.toLowerCase().search(search.toLowerCase()) !== -1
+      ),
+    ]);
+  }, [search]);
+
+  // const initializeAllTweetLocations = (locationCountList) => {
+  //   const newList = [];
+  //   locationCountList.forEach((element) => {
+  //     newList.push(element);
+  //   });
+  //   console.log("New Location List");
+  //   console.log(newList);
+  //   setAllTweetLocations(newList);
+  // };
+
+  /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
+  const openNav = () => {
+    document.getElementById("mySidenav").style.width = "450px";
+    document.getElementById("main_right").style.marginRight = "450px";
+  };
+
+  /* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
+  const closeNav = () => {
+    document.getElementById("mySidenav").style.width = "0";
+    document.getElementById("main_right").style.marginRight = "0";
+  };
+
+  const tweetIsPresent = (location) => {
+    return selectedTweetLocations.find((item) => item.value === location.value);
+  };
+
+  const addTweetLocation = (location) => {
+    if (tweetIsPresent(location)) return;
+
+    setSelectedTweetLocations([...selectedTweetLocations, location]);
   };
 
   const removeTweetLocation = (code) => {
-    setTweetLocations([
-      ...tweetLocations.filter((item) => item.value !== code),
+    setSelectedTweetLocations([
+      ...selectedTweetLocations.filter((item) => item.value !== code),
     ]);
   };
 
   const showTweet = (code) => {
     const mList = new Map(tweetList);
     mList.set(code, code);
+
+    console.log(mList);
     // const tweet =
     addTweetLocation({ label: code, value: code });
-    // setTweetLocations([...tweetLocations, { label: code, value: code }]);
+    // setSelectedTweetLocations([...selectedTweetLocations, { label: code, value: code }]);
     // mList.forEach()
     // console.log(mList);
     setTweetList(mList);
+    openNav();
   };
 
   const removeTweet = (code) => {
@@ -123,6 +174,7 @@ function MapComponent({ searchObject }) {
   // It takes an item and the objects for style coding
   // checks for the proper sentiment and displays the appropriate style
   const selectSentiment = (item, pos, neu, neg) => {
+    // console.log(item);
     return item.average >= -1 && item.average < 0
       ? neg
       : item.average >= 0 && item.average < 0.5
@@ -159,7 +211,7 @@ function MapComponent({ searchObject }) {
   ) : (
     <div>
       {/* Display the tweet modals on the map */}
-      {[...tweetList].map(([code, id]) => {
+      {/* {[...tweetList].map(([code, id]) => {
         // console.log(code);
         return (
           <Modal
@@ -170,15 +222,54 @@ function MapComponent({ searchObject }) {
             closeModal={() => removeTweet(code)}
           />
         );
-      })}
+      })} */}
 
       <div className="main_map_container">
         <div className="map_container_left">
+          <div className="map_nav_bar">
+            <div className="map_search">
+              <form>
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </form>
+            </div>
+            <div className="map_location_chips pill_buttons" id="main_right">
+              <div className="pill_buttons">
+                {filteredCoordinates.map((item, index) => (
+                  <PillButton
+                    key={index}
+                    // onClick={() => showTweet(item.locationCode)}
+                    // isActive={isSelected(text)}
+                    onSelect={() => {
+                      showTweet(item.locationCode);
+                    }}
+                  >
+                    {item.locationCode}
+                  </PillButton>
+                ))}
+              </div>
+              {/* {coordinates.map((option, i) => (
+                <div key={option.locationCode} className="pill_button">
+                  <div
+                  // onClick={() => handleSelectChips(option)}
+                  >
+                    {option.locationCode}
+                  </div>
+                  <span className="chipsBtn" onClick={() => {}}>
+                    <ChipsIcon className="mt-[15px]" />
+                  </span>
+                </div>
+              ))} */}
+            </div>
+          </div>
           <div className="map-container">
-            <div className="w-[97%] border border-outline rounded-lg mx-auto shadow-md text-center text-onprimarycontainer overflow-hidden">
+            <div className="w-[100%] border border-outline rounded-lg mx-auto shadow-md text-center text-onprimarycontainer overflow-hidden">
               <MapContainer
                 center={center}
-                zoom={1.7}
+                zoom={3}
                 scrollWheelZoom={true}
                 maxBounds={bounds}
                 maxZoom={19}
@@ -213,28 +304,28 @@ function MapComponent({ searchObject }) {
                               Tweets: {item.count}
                             </p>
                             <p className={classes.popup_mean_sentiment}>
-                              <strong>Mean sentiment:</strong>
+                              <strong>Mean sentiment: </strong>
                               {`${selectSentiment(
                                 item,
                                 "Positive",
                                 "Neutral",
                                 "Negative"
-                              )}`}
+                              )}`}{" "}
                               {(+item.average).toFixed(2)}
                             </p>
                             <p className={classes.popup_sentiment_count}>
                               Sentiment count: {item.count}
                             </p>
-                            <hr />
+                            {/* <hr />
                             <p>
                               <strong>Legend:</strong> Positive &gt; 0.5; 0 &lt;
                               Neutral &lt; 0.5; Negative &lt; 0
-                            </p>
+                            </p> */}
                           </div>
                         </Popup>
                         {item.latitude && item.longitude && (
                           <CircleMarker
-                            radius={item.count * 0.5}
+                            radius={item.count * 1}
                             center={[item.latitude, item.longitude]}
                             pathOptions={selectSentiment(
                               item,
@@ -252,22 +343,30 @@ function MapComponent({ searchObject }) {
             </div>
           </div>
         </div>
-        <div className="map_container_right">
-          {[...tweetList].map(([code, id]) => {
-            // console.log(code);
-            return (
+        {
+          // <div className="map_container_right">
+          <div>
+            <div id="mySidenav" className="sidenav">
+              <a className="closebtn" onClick={closeNav}>
+                &times;
+              </a>
+              {/* {[...tweetList].map(([code, id]) => { */}
+              {/* // console.log(code); */}
+              {/* return ( */}
               <SelectComponent
-                key={id}
-                tweetLocation={code}
+                // key={id}
+                tweetLocations={selectedTweetLocations}
                 avTweetDetails={coordinates}
-                options={tweetLocations}
+                options={tweetColumns}
                 socialMediaResponse={tweetData}
                 selectedColumns={tweetColumns}
                 removeTweet={removeTweet}
               />
-            );
-          })}
-        </div>
+              {/* ); */}
+              {/* })} */}
+            </div>
+          </div>
+        }
       </div>
     </div>
   );

@@ -58,7 +58,7 @@ const TableComponent = ({ coloumn, socialMediaResponse }) => {
   return (
     <div>
       <div className="">
-        <div className="rounded-t-xl overflow-hidden  from-emerald-50 to-teal-100 p-5">
+        <div className="rounded-t-xl overflow-hidden  from-emerald-50 to-teal-100">
           {coloumn.length > 0 && (
             <div className="overflow-hidden custom-scroll tableComments">
               <div className="pr-4 widthbox">
@@ -86,8 +86,7 @@ const TableComponent = ({ coloumn, socialMediaResponse }) => {
                     itemCount={socialMediaData.length}
                     itemSize={120}
                     width={"100%"}
-                    style={{ marginTop: "12px" }}
-                    className="mb-4 fixed_size_list"
+                    className="mb-10 fixed_size_list"
                   >
                     {({ index, style }) => {
                       return (
