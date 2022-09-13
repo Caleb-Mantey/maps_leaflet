@@ -4,12 +4,14 @@ import SelectIcon from "../Icons/SelectIcon";
 function PillButton({ onSelect, isActive, children }) {
   return (
     <button
-      className={isActive ? "pill_button_selected" : "pill_button"}
+      className={
+        isActive ? "location_pill_button_selected" : "location_pill_button"
+      }
       onClick={() => {
         onSelect();
       }}
     >
-      <div className="pill_button_content">
+      <div className="location_pill_button_content">
         {isActive ? <SelectIcon /> : ""}
         {children}
       </div>

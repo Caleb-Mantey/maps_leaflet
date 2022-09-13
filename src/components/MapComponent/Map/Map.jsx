@@ -25,7 +25,8 @@ import "./Map.scss";
 import { data } from "../util/data";
 import SelectComponent from "../MultiSelect/SelectComponent";
 import ChipsIcon from "../Icons/ChipsIcon";
-import PillButton from "../Buttons/PillButton";
+import PillButton from "../Buttons/LocationPillButton";
+import SearchIcon from "../Icons/SearchIcon";
 
 var southWest = L.latLng(-90, 180),
   northEast = L.latLng(90, -180),
@@ -97,8 +98,23 @@ function MapComponent({ searchObject }) {
     }
   }, [twitterResponse]);
 
-  useEffect(() => {
-    if (search === "") {
+  // useEffect(() => {
+  //   if (search === "") {
+  //     //  setFilteredCoordinates([...coordinates]);
+  //     return;
+  //   }
+
+  //   setFilteredCoordinates([
+  //     ...coordinates.filter(
+  //       (coord) =>
+  //         coord.locationCode.toLowerCase().search(search.toLowerCase()) !== -1
+  //     ),
+  //   ]);
+  // }, [search]);
+
+  const fiterCoordinatesList = (value) => {
+    setSearch(value);
+    if (value === "") {
       setFilteredCoordinates([...coordinates]);
       return;
     }
@@ -106,20 +122,10 @@ function MapComponent({ searchObject }) {
     setFilteredCoordinates([
       ...coordinates.filter(
         (coord) =>
-          coord.locationCode.toLowerCase().search(search.toLowerCase()) !== -1
+          coord.locationCode.toLowerCase().search(value.toLowerCase()) !== -1
       ),
     ]);
-  }, [search]);
-
-  // const initializeAllTweetLocations = (locationCountList) => {
-  //   const newList = [];
-  //   locationCountList.forEach((element) => {
-  //     newList.push(element);
-  //   });
-  //   console.log("New Location List");
-  //   console.log(newList);
-  //   setAllTweetLocations(newList);
-  // };
+  };
 
   /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
   const openNav = () => {
@@ -230,14 +236,20 @@ function MapComponent({ searchObject }) {
             <div className="map_search">
               <form>
                 <input
+                  className="map_search_box"
                   type="text"
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search Locations"
+                  onChange={(e) => fiterCoordinatesList(e.target.value)}
                 />
               </form>
+              <SearchIcon />
             </div>
-            <div className="map_location_chips pill_buttons" id="main_right">
-              <div className="pill_buttons">
+            <div
+              className="map_location_chips location_pill_buttons"
+              id="main_right"
+            >
+              <div className="location_pill_buttons">
                 {filteredCoordinates.map((item, index) => (
                   <PillButton
                     key={index}

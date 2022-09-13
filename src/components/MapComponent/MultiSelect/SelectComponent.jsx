@@ -1,5 +1,5 @@
 import React, { useState, Fragment, useEffect } from "react";
-import TableComponent from "./../Table/Table";
+import TableComponent from "../Table/Table";
 import ChipsIcon from "../Icons/ChipsIcon";
 import "./SelectChips.scss";
 import ChipsRemoveIcon from "../Icons/ChipsRemoveIcon";
