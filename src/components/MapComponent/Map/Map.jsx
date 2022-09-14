@@ -58,7 +58,7 @@ function MapComponent({ searchObject }) {
   const [search, setSearch] = useState("");
   const [allTweetLocations, setAllTweetLocations] = useState([]);
   const [isFullScreen, setIsFullScreen] = useState(false);
-  // const leafletMap = useMap();
+  const [leafletMap, setMap] = useState(null);
 
   const tweetColumns = [
     { label: "Profile Image", value: "profile_image_url" },
@@ -165,8 +165,14 @@ function MapComponent({ searchObject }) {
 
     if (!isFullScreen) setIsFullScreen(true);
     // lleafletMap.setView()
-
+    const { latitude, longitude } = coordinates.find(
+      (coords) => coords.locationCode === code
+    );
+    leafletMap.setView([latitude, longitude], 5);
     console.log(mList);
+    console.log(latitude);
+    console.log(longitude);
+    console.log(coordinates);
     // const tweet =
     addTweetLocation({ label: code, value: code });
     // setSelectedTweetLocations([...selectedTweetLocations, { label: code, value: code }]);
@@ -279,6 +285,7 @@ function MapComponent({ searchObject }) {
               maxZoom={19}
               minZoom={1.5}
               zoomControl={false}
+              ref={setMap}
             >
               {/* url gets the map */}
               <TileLayer

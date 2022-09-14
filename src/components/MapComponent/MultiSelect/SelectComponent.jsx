@@ -57,13 +57,13 @@ const SelectComponent = ({
 
   const filteredByLocations = (location) => {
     // console.log(selected);
-    console.log(
-      socialMediaResponse.filter((item) => item.locationCode === location)
-    );
+    // console.log(
+    //   socialMediaResponse.filter((item) => item.locationCode === location)
+    // );
     return socialMediaResponse.filter((item) => item.locationCode === location);
   };
 
-  console.log(tweetLocations);
+  // console.log(tweetLocations);
   return (
     <Fragment>
       <div
