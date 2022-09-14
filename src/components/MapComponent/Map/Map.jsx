@@ -9,6 +9,7 @@ import {
   Popup,
   FeatureGroup,
   CircleMarker,
+  useMap,
 } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -27,6 +28,7 @@ import SelectComponent from "../MultiSelect/SelectComponent";
 import ChipsIcon from "../Icons/ChipsIcon";
 import PillButton from "../Buttons/LocationPillButton";
 import SearchIcon from "../Icons/SearchIcon";
+import { useRef } from "react";
 
 var southWest = L.latLng(-90, 180),
   northEast = L.latLng(90, -180),
@@ -55,6 +57,8 @@ function MapComponent({ searchObject }) {
   const [selectedTweetLocations, setSelectedTweetLocations] = useState([]);
   const [search, setSearch] = useState("");
   const [allTweetLocations, setAllTweetLocations] = useState([]);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  // const leafletMap = useMap();
 
   const tweetColumns = [
     { label: "Profile Image", value: "profile_image_url" },
@@ -159,6 +163,9 @@ function MapComponent({ searchObject }) {
     const mList = new Map(tweetList);
     mList.set(code, code);
 
+    if (!isFullScreen) setIsFullScreen(true);
+    // lleafletMap.setView()
+
     console.log(mList);
     // const tweet =
     addTweetLocation({ label: code, value: code });
@@ -215,171 +222,163 @@ function MapComponent({ searchObject }) {
   twitterError ? (
     <div>There was an error...</div>
   ) : (
-    <div>
-      {/* Display the tweet modals on the map */}
-      {/* {[...tweetList].map(([code, id]) => {
-        // console.log(code);
-        return (
-          <Modal
-            key={id}
-            tweetLocation={code}
-            avTweetDetails={coordinates}
-            tweetData={tweetData}
-            closeModal={() => removeTweet(code)}
-          />
-        );
-      })} */}
-
-      <div className="main_map_container">
-        <div className="map_container_left">
-          <div className="map_nav_bar">
-            <div className="map_search">
-              <form>
-                <input
-                  className="map_search_box"
-                  type="text"
-                  value={search}
-                  placeholder="Search Locations"
-                  onChange={(e) => fiterCoordinatesList(e.target.value)}
-                />
-              </form>
-              <SearchIcon />
-            </div>
-            <div
-              className="map_location_chips location_pill_buttons"
-              id="main_right"
-            >
-              <div className="location_pill_buttons">
-                {filteredCoordinates.map((item, index) => (
-                  <PillButton
-                    key={index}
-                    // onClick={() => showTweet(item.locationCode)}
-                    // isActive={isSelected(text)}
-                    onSelect={() => {
-                      showTweet(item.locationCode);
-                    }}
-                  >
-                    {item.locationCode}
-                  </PillButton>
-                ))}
-              </div>
-              {/* {coordinates.map((option, i) => (
-                <div key={option.locationCode} className="pill_button">
-                  <div
-                  // onClick={() => handleSelectChips(option)}
-                  >
-                    {option.locationCode}
-                  </div>
-                  <span className="chipsBtn" onClick={() => {}}>
-                    <ChipsIcon className="mt-[15px]" />
-                  </span>
-                </div>
-              ))} */}
+    <div className={isFullScreen ? "fullscreen_map" : "main_map_container"}>
+      <div className="map_container_left">
+        {isFullScreen && (
+          <a
+            className="closebtn1"
+            onClick={() => setIsFullScreen(false)}
+            style={{ cursor: "pointer" }}
+          >
+            &times;
+          </a>
+        )}
+        <div className="map_nav_bar">
+          <div className="map_search">
+            <form>
+              <input
+                className="map_search_box"
+                type="text"
+                value={search}
+                placeholder="Search Locations"
+                onChange={(e) => fiterCoordinatesList(e.target.value)}
+              />
+            </form>
+            <SearchIcon />
+          </div>
+          <div
+            className="map_location_chips location_pill_buttons"
+            id="main_right"
+          >
+            <div className="location_pill_buttons">
+              {filteredCoordinates.map((item, index) => (
+                <PillButton
+                  key={index}
+                  // onClick={() => showTweet(item.locationCode)}
+                  // isActive={isSelected(text)}
+                  onSelect={() => {
+                    showTweet(item.locationCode);
+                  }}
+                >
+                  {item.locationCode}
+                </PillButton>
+              ))}
             </div>
           </div>
-          <div className="map-container">
-            <div className="w-[100%] border border-outline rounded-lg mx-auto shadow-md text-center text-onprimarycontainer overflow-hidden">
-              <MapContainer
-                center={center}
-                zoom={3}
-                scrollWheelZoom={true}
-                maxBounds={bounds}
-                maxZoom={19}
-                minZoom={1.5}
-              >
-                {/* url gets the map */}
-                <TileLayer
-                  noWrap={true}
-                  url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png"
-                />
-                {/* plot bubbles for the tweets based on location */}
-                {coordinates.map((item, id) => {
-                  return (
-                    <div key={id}>
-                      <FeatureGroup>
-                        <Popup
-                          className={`${selectSentiment(
-                            item,
-                            "good",
-                            "neutral",
-                            "bad"
-                          )} tooltip`}
+        </div>
+        <div className="map-container">
+          <div
+            className="w-[100%] border border-outline rounded-lg mx-auto shadow-md text-center text-onprimarycontainer overflow-hidden"
+            style={{ height: "100%" }}
+          >
+            <MapContainer
+              center={center}
+              zoom={3}
+              scrollWheelZoom={true}
+              maxBounds={bounds}
+              maxZoom={19}
+              minZoom={1.5}
+              zoomControl={false}
+            >
+              {/* url gets the map */}
+              <TileLayer
+                noWrap={true}
+                url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png"
+              />
+              {/* plot bubbles for the tweets based on location */}
+              {coordinates.map((item, id) => {
+                return (
+                  <div key={id}>
+                    <FeatureGroup>
+                      <Popup
+                        className={`${selectSentiment(
+                          item,
+                          "good",
+                          "neutral",
+                          "bad"
+                        )} tooltip`}
+                      >
+                        <div
+                          className={classes.popup}
+                          onClick={() => showTweet(item.locationCode)}
                         >
-                          <div
-                            className={classes.popup}
-                            onClick={() => showTweet(item.locationCode)}
-                          >
-                            <p className={classes.popup_title}>
-                              <strong>Location: {item.locationCode}</strong>
-                            </p>
-                            <p className={classes.popup_tweet_count}>
-                              Tweets: {item.count}
-                            </p>
-                            <p className={classes.popup_mean_sentiment}>
-                              <strong>Mean sentiment: </strong>
-                              {`${selectSentiment(
-                                item,
-                                "Positive",
-                                "Neutral",
-                                "Negative"
-                              )}`}{" "}
-                              {(+item.average).toFixed(2)}
-                            </p>
-                            <p className={classes.popup_sentiment_count}>
-                              Sentiment count: {item.count}
-                            </p>
-                            {/* <hr />
+                          <p className={classes.popup_title}>
+                            <strong>Location: {item.locationCode}</strong>
+                          </p>
+                          <p className={classes.popup_tweet_count}>
+                            Tweets: {item.count}
+                          </p>
+                          <p className={classes.popup_mean_sentiment}>
+                            <strong>Mean sentiment: </strong>
+                            {`${selectSentiment(
+                              item,
+                              "Positive",
+                              "Neutral",
+                              "Negative"
+                            )}`}{" "}
+                            {(+item.average).toFixed(2)}
+                          </p>
+                          <p className={classes.popup_sentiment_count}>
+                            Sentiment count: {item.count}
+                          </p>
+                          {/* <hr />
                             <p>
                               <strong>Legend:</strong> Positive &gt; 0.5; 0 &lt;
                               Neutral &lt; 0.5; Negative &lt; 0
                             </p> */}
-                          </div>
-                        </Popup>
-                        {item.latitude && item.longitude && (
-                          <CircleMarker
-                            radius={item.count * 1}
-                            center={[item.latitude, item.longitude]}
-                            pathOptions={selectSentiment(
-                              item,
-                              fillGreenOptions,
-                              fillOrangeOptions,
-                              fillRedOptions
-                            )}
-                          />
-                        )}
-                      </FeatureGroup>
-                    </div>
-                  );
-                })}
-              </MapContainer>
-            </div>
+                        </div>
+                      </Popup>
+                      {item.latitude && item.longitude && (
+                        <CircleMarker
+                          radius={item.count * 1}
+                          center={[item.latitude, item.longitude]}
+                          pathOptions={selectSentiment(
+                            item,
+                            fillGreenOptions,
+                            fillOrangeOptions,
+                            fillRedOptions
+                          )}
+                        />
+                      )}
+                    </FeatureGroup>
+                  </div>
+                );
+              })}
+            </MapContainer>
           </div>
         </div>
-        {
-          // <div className="map_container_right">
-          <div>
-            <div id="mySidenav" className="sidenav">
-              <a className="closebtn" onClick={closeNav}>
+      </div>
+      {
+        // <div className="map_container_right">
+        <div>
+          <div id="mySidenav" className="sidenav">
+            <div className="map_side_nav_title">
+              <h4>Tweets By Location</h4>
+              <a
+                className="closebtn"
+                onClick={closeNav}
+                style={{ cursor: "pointer" }}
+              >
                 &times;
               </a>
-              {/* {[...tweetList].map(([code, id]) => { */}
-              {/* // console.log(code); */}
-              {/* return ( */}
-              <SelectComponent
-                // key={id}
-                tweetLocations={selectedTweetLocations}
-                avTweetDetails={coordinates}
-                options={tweetColumns}
-                socialMediaResponse={tweetData}
-                selectedColumns={tweetColumns}
-                removeTweet={removeTweet}
-              />
-              {/* ); */}
-              {/* })} */}
             </div>
+            {/* {[...tweetList].map(([code, id]) => { */}
+            {/* // console.log(code); */}
+            {/* return ( */}
+            <SelectComponent
+              // key={id}
+              tweetLocations={selectedTweetLocations}
+              avTweetDetails={coordinates}
+              options={tweetColumns}
+              socialMediaResponse={tweetData}
+              selectedColumns={tweetColumns}
+              removeTweet={removeTweet}
+            />
+            {/* ); */}
+            {/* })} */}
           </div>
-        }
-      </div>
+        </div>
+      }
     </div>
   );
 }

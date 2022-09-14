@@ -12,6 +12,7 @@
   --sentiment-bad-text: hsl(358deg 100% 13%);
   --link-blue: hsl(207deg 87% 60%);
   --link-blue-hover: hsl(207deg 87% 50%);
+  height: 100%;
 
   position: relative;
   z-index: 25;
@@ -23,7 +24,7 @@ a {
 }
 
 .leaflet-container {
-  height: 100vh;
+  height: 100%;
   width: 100%;
   box-shadow: 0 0 5px #333;
 }
@@ -121,5 +122,192 @@ a {
 
   to {
     transform: scale(1);
+  }
+}
+
+.main_map_container {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  height: 600px;
+  width: 800px;
+}
+
+.map_side_nav_title{
+  position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 15px 0px 5px;
+}
+
+.fullscreen_map{
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+}
+
+.fullscreen_map .closebtn1{
+  position: absolute;
+  top: 0;
+  left: 10px;
+  font-size: 36px;
+  z-index: 28;
+}
+
+.map_container_left {
+  flex: 1;
+  height: 100%;
+}
+
+.map_container_right {
+  flex: 1;
+}
+
+.map_nav_bar {
+  height: 60px;
+  width: 100%;
+  position: absolute;
+  z-index: 26;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  transition: 0.5s;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+}
+
+.map_search {
+  margin-left: 60px;
+  box-shadow: 0 0 2px rgb(0 0 0 / 20%), 0 -1px 0 rgb(0 0 0 / 2%);
+  border-radius: 8px 8px 0 0;
+  border-bottom: 1px solid rgb(218, 220, 224);
+  padding: 12px 28px 11px 64px;
+  background-color: white;
+  display: flex;
+}
+
+.map_search_box {
+  border: none;
+  width: 100%;
+  z-index: 6;
+  left: 0px;
+  outline: none;
+  color: rgb(32, 33, 36);
+  font-size: 15px;
+  padding: 0 !important;
+  line-height: 24px;
+  vertical-align: top;
+}
+
+.map_location_chips {
+  margin-left: 10px;
+  overflow-x: scroll;
+}
+
+.location_pill_buttons {
+  flex: 1;
+  display: flex;
+  padding: 5px;
+}
+
+.location_pill_button {
+  background-color: white;
+  border: 1px solid #f3f3f3 !important;
+  border: none;
+  color: black;
+  font-size: 12px;
+  padding: 2px 2px;
+  width: 80px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 4px;
+  cursor: pointer;
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%);
+}
+
+.location_pill_button_selected {
+  background-color: #ddd;
+  /* border: 1px solid #dcfce7 !important; */
+  border: 1px solid #7bc62d !important;
+  border: none;
+  color: black;
+  padding: 10px 10px;
+  padding-right: 15px;
+  text-align: center;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%);
+}
+
+.location_pill_button_content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+.location_pill_button:hover {
+  background-color: #f3f3f3;
+}
+
+.sidenav {
+  height: 100%; /* 100% Full-height */
+  width: 0; /* 0 width - change this with JavaScript */
+  position: absolute; /* Stay in place */
+  z-index: 26; /* Stay on top */
+  top: 0; /* Stay at the top */
+  right: 0;
+  background-color: white; /* Black*/
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 60px; /* Place content 60px from the top */
+  box-shadow: 0 1px 2px rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%);
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+/* The navigation menu links */
+.sidenav a {
+  color: #818181;
+  transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover {
+  color: #ddd;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+  font-size: 36px;
+  // margin-left: 50px;
+}
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+  transition: margin-left 0.5s;
+  padding: 20px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-top: 15px;
+  }
+  .sidenav a {
+    font-size: 18px;
   }
 }

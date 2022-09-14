@@ -6,11 +6,11 @@ function App() {
     <div
       style={{
         display: "flex",
-        alignItems: "center",
+        // alignItems: "center",
         justifyContent: "center",
       }}
     >
-      <div style={{ width: 800, height: 600 }}>
+      <div>
         {" "}
         <MapComponent />
       </div>
